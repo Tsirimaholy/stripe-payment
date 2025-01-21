@@ -11,7 +11,6 @@ export const action = async ({ request }: LoaderFunctionArgs) => {
   let event;
   const body = await request.text();
   const stripeSignature = request.headers.get("stripe-signature") as string;
-  console.log({stripeSignature})
   const webhookSecret =
     "whsec_5c7d22b0b03ca8cb9eacd9a1f057808b82452aa00f87d8083c81061ec48f1ef6";
   if (!stripeSignature || !webhookSecret) {

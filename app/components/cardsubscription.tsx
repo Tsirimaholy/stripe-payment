@@ -52,6 +52,7 @@ const CardSubscription: FC<TCardSubscription> = ({ clientSecret }) => {
 
     if (error) {
       // show error and collect new card details.
+      console.log({error})
       setMessage(error.message);
       return;
     }

@@ -9,7 +9,11 @@ export type CreateCustomerDTO = {
 };
 
 // Response type from the API
-export type CustomerResponse = Stripe.Response<Stripe.ApiList<Stripe.Customer>>;
+export type TCustomerResponse = Stripe.Response<Stripe.Customer>;
+export type CustomerResponse = {
+  data: Stripe.Response<Stripe.Customer>;
+  status: boolean;
+};
 
 // Error type
 export type CustomerError = {
@@ -18,6 +22,10 @@ export type CustomerError = {
   status?: number;
 };
 
+// Define the error response
+export type ErrorResponse = {
+  error: string;
+};
 /**
  * Creates a new customer
  * @param customer Customer information
@@ -35,20 +43,13 @@ export const createCustomer = async (
 
     return response.data;
   } catch (error: unknown) {
-    if (!axios.isAxiosError(error)) {
+    if (axios.isAxiosError(error) && error.response) {
       throw {
-        message: "Unknown error",
-      };
+        error: error.response.data.errors || "Failed to fetch customers",
+      } as ErrorResponse;
     }
-    const stripeError: Stripe.StripeRawError = {
-      type: error.response?.data?.type || "StripeError",
-      message: error.response?.data?.message || "Failed to create customer",
-      code: error.response?.data?.code,
-      param: error.response?.data?.param,
-      detail: error.response?.data?.detail,
-      requestId: error.response?.data?.requestId,
-      statusCode: error.response?.status,
-    };
-    throw stripeError;
+    throw {
+      error: "An unknown error occurred",
+    } as ErrorResponse;
   }
 };

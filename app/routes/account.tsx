@@ -3,7 +3,6 @@ import type { LoaderFunctionArgs } from "react-router";
 import { Link, useActionData, useLoaderData } from "react-router";
 import { listSubscriptions } from "~/services/payment";
 import { getSession } from "~/sessions";
-import {action} from "~/routes/webhook"
 const AccountSubscription = ({ subscription }) => {
   return (
     <section className="border rounded-lg p-6 mb-4 bg-white shadow-sm">
@@ -78,7 +77,6 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
 const Account = () => {
   const { subscriptions } = useLoaderData<typeof loader>();
-  const actionData = useActionData<typeof action>();
 
 
   if (!subscriptions) {
@@ -92,7 +90,7 @@ const Account = () => {
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
       <div className="flex items-center justify-between mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Account {actionData?.data}</h1>
+        <h1 className="text-3xl font-bold text-gray-900">Account</h1>
 
         <div className="space-x-4">
           <a

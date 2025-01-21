@@ -4,17 +4,17 @@ import { useNavigate } from "react-router";
 import { useNavigation } from "react-router";
 import { redirect } from "react-router";
 import { Form } from "react-router";
-import { createCustomer } from "~/services/customer";
+import { createCustomer } from "~/api/customers";
 import { commitSession, getSession } from "~/sessions";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const data = await request.formData();
   const email = data.get("email") as string;
   const name = data.get("name") as string;
-  const createdCustomer = await createCustomer(email, name);
+  const createdCustomer = await createCustomer({email, name});
 
   const session = await getSession(request.headers.get("Cookie"));
-  session.set("customerId", createdCustomer.id);
+  session.set("customerId", createdCustomer.data.id);
   return redirect("/prices", {
     headers: { "Set-Cookie": await commitSession(session) },
   });

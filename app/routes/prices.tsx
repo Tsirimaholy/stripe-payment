@@ -5,7 +5,7 @@ import { Form, redirect } from "react-router";
 import { useNavigation } from "react-router";
 import { useLoaderData } from "react-router";
 import { useLocation, useNavigate } from "react-router";
-import { getConfig, subscribe } from "~/services/payment";
+import { getPrices, createSubscription } from "~/api/payments";
 import { commitSession, getSession } from "~/sessions";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
@@ -13,10 +13,12 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const data = await request.formData();
   const priceId = data.get("priceId") as string;
   const customerId = session.get("customerId") as string;
-  console.log({ customerId });
   try {
-    const { clientSecret } = await subscribe(customerId, priceId);
-    return redirect(`/subscribe?client_secret=${clientSecret}`, {
+    const { data: {client_secret} } = await createSubscription({
+      customer_id: customerId,
+      price_id: priceId,
+    });
+    return redirect(`/subscribe?client_secret=${client_secret}`, {
       headers: {
         "Set-Cookie": await commitSession(session),
       },
@@ -27,8 +29,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 };
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const session = await getSession(request.headers.get("Cookie"));
-  const { prices } = await getConfig();
-  return { prices, customerId: session.get("customerId") };
+  const prices = await getPrices();
+  return { prices: prices.data.prices, customerId: session.get("customerId") };
 };
 const Prices = () => {
   const { prices, customerId, error } = useLoaderData<typeof loader>();
@@ -50,7 +52,7 @@ const Prices = () => {
         </div>
 
         <div className="mt-12 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {prices.data.map((price) => (
+          {prices.map((price) => (
             <div
               key={price.id}
               className="bg-white rounded-lg shadow-lg overflow-hidden transition-transform hover:scale-105"

@@ -4,8 +4,11 @@ import Stripe from "stripe";
 import axios from "axios";
 
 // Define the response type using Stripe types
-export type PricesResponse = Stripe.ApiList<Stripe.Price>;
-
+export type TPricesResponse = Stripe.ApiList<Stripe.Price>;
+export type PricesResponse = {
+  success: boolean;
+  data: TPricesResponse;
+};
 // Define the error response
 export type ErrorResponse = {
   error: string;
@@ -25,7 +28,7 @@ export const getPrices = async (): Promise<PricesResponse> => {
   } catch (error: unknown) {
     if (axios.isAxiosError(error) && error.response) {
       throw {
-        error: error.response.data.error || "Failed to fetch prices",
+        error: error.response.data.errors || "Failed to fetch prices",
       } as ErrorResponse;
     }
     throw {
@@ -41,10 +44,16 @@ export type CreateSubscriptionDTO = {
 };
 
 // Response type for subscription
-export type SubscriptionResponse = {
+export type TSubscriptionResponse = {
   subscription: Stripe.Subscription;
   client_secret: string;
 };
+
+export type SubscriptionResponse = {
+  success: boolean;
+  data: TSubscriptionResponse;
+};
+
 
 /**
  * Creates a new subscription
@@ -65,7 +74,7 @@ export const createSubscription = async (
   } catch (error: unknown) {
     if (axios.isAxiosError(error) && error.response) {
       throw {
-        error: error.response.data.error || "Failed to create subscription",
+        error: error.response.data.errors || "Failed to create subscription",
       } as ErrorResponse;
     }
     throw {
@@ -95,7 +104,7 @@ export const listSubscriptions = async (
   } catch (error: unknown) {
     if (axios.isAxiosError(error) && error.response) {
       throw {
-        error: error.response.data.error || "Failed to fetch subscriptions",
+        error: error.response.data.errors || "Failed to fetch subscriptions",
       } as ErrorResponse;
     }
     throw {
