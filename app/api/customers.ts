@@ -1,6 +1,7 @@
-import type { AxiosResponse } from 'axios';
+import type { AxiosError, AxiosResponse } from "axios";
 import api from "./config";
-
+import Stripe from "stripe";
+import axios from "axios";
 // Input type for creating a customer
 export type CreateCustomerDTO = {
   email: string;
@@ -8,12 +9,7 @@ export type CreateCustomerDTO = {
 };
 
 // Response type from the API
-export type CustomerResponse = {
-  id: string;
-  email: string;
-  name: string;
-  created: number;
-};
+export type CustomerResponse = Stripe.Response<Stripe.ApiList<Stripe.Customer>>;
 
 // Error type
 export type CustomerError = {
@@ -38,13 +34,21 @@ export const createCustomer = async (
     );
 
     return response.data;
-  } catch (error: any) {
-    const customerError: CustomerError = {
-      message: error.response?.data?.message || 'Failed to create customer',
+  } catch (error: unknown) {
+    if (!axios.isAxiosError(error)) {
+      throw {
+        message: "Unknown error",
+      };
+    }
+    const stripeError: Stripe.StripeRawError = {
+      type: error.response?.data?.type || "StripeError",
+      message: error.response?.data?.message || "Failed to create customer",
       code: error.response?.data?.code,
-      status: error.response?.status
+      param: error.response?.data?.param,
+      detail: error.response?.data?.detail,
+      requestId: error.response?.data?.requestId,
+      statusCode: error.response?.status,
     };
-
-    throw customerError;
+    throw stripeError;
   }
 };
