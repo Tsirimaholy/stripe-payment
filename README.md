@@ -1,3 +1,7 @@
+⚠️ **Warning**: Before using the application, make sure to set your API token in `app/api/config.ts`. You'll need to hardcode your token there for the app to function properly.
+
+
+
 # Welcome to React Router!
 
 A modern, production-ready template for building full-stack React applications using React Router.
