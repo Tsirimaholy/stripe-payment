@@ -11,7 +11,7 @@ export type CreateCustomerDTO = {
 // Response type from the API
 export type TCustomerResponse = Stripe.Response<Stripe.Customer>;
 export type CustomerResponse = {
-  data: Stripe.Response<Stripe.Customer>;
+  data: {customer_id: string}
   status: boolean;
 };
 
@@ -44,10 +44,12 @@ export const createCustomer = async (
     return response.data;
   } catch (error: unknown) {
     if (axios.isAxiosError(error) && error.response) {
+      console.log({error})
       throw {
         error: error.response.data.errors || "Failed to fetch customers",
       } as ErrorResponse;
     }
+    console.log({error})
     throw {
       error: "An unknown error occurred",
     } as ErrorResponse;

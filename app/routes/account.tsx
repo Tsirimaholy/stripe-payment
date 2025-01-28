@@ -6,6 +6,7 @@ import { getSession } from "~/sessions";
 const AccountSubscription = ({ subscription }) => {
   return (
     <section className="border rounded-lg p-6 mb-4 bg-white shadow-sm">
+      <Link to={"/invoices"} className="inline-flex items-center px-4 py-2 mb-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">Invoices page</Link>
       <h4 className="text-lg font-semibold mb-4">
         <a
           href={`https://dashboard.stripe.com/test/subscriptions/${subscription.id}`}

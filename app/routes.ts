@@ -7,4 +7,5 @@ export default [
   route("subscribe", "routes/subscribe.tsx"),
   route("account", "routes/account.tsx"),
   route("webhook", "routes/webhook.ts"),
+  route("invoices", "routes/invoices.tsx"),
 ] satisfies RouteConfig;

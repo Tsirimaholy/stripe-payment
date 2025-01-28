@@ -26,6 +26,7 @@ export const getPrices = async (): Promise<PricesResponse> => {
     );
     return response.data;
   } catch (error: unknown) {
+    console.log({error})
     if (axios.isAxiosError(error) && error.response) {
       throw {
         error: error.response.data.errors || "Failed to fetch prices",
@@ -72,6 +73,7 @@ export const createSubscription = async (
 
     return response.data;
   } catch (error: unknown) {
+    console.log({error})
     if (axios.isAxiosError(error) && error.response) {
       throw {
         error: error.response.data.errors || "Failed to create subscription",

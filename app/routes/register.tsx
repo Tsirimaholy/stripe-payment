@@ -14,7 +14,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const createdCustomer = await createCustomer({email, name});
 
   const session = await getSession(request.headers.get("Cookie"));
-  session.set("customerId", createdCustomer.data.id);
+  session.set("customerId", createdCustomer.data.customer_id);
   return redirect("/prices", {
     headers: { "Set-Cookie": await commitSession(session) },
   });
