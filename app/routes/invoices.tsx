@@ -16,8 +16,8 @@ interface Invoice {
 export const loader = async () => {
   console.log("Loading invoices...");
   const response = await listInvoices();
-  console.log(response.data.invoices)
-  return { invoices: response.data.invoices };
+  console.log(response.data)
+  return { invoices: response.data };
 };
 
 export default function Invoices() {
