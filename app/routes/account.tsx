@@ -3,7 +3,9 @@ import type { LoaderFunctionArgs } from "react-router";
 import { Link, useActionData, useLoaderData } from "react-router";
 import { listSubscriptions } from "~/services/payment";
 import { getSession } from "~/sessions";
-const AccountSubscription = ({ subscription }) => {
+import { Stripe } from "stripe";
+
+const AccountSubscription = ({ subscription }: { subscription: Stripe.Subscription }) => {
   return (
     <section className="border rounded-lg p-6 mb-4 bg-white shadow-sm">
       <Link to={"/invoices"} className="inline-flex items-center px-4 py-2 mb-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">Invoices page</Link>
