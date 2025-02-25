@@ -5,72 +5,6 @@ import { listSubscriptions } from "~/services/payment";
 import { getSession } from "~/sessions";
 import { Stripe } from "stripe";
 
-const AccountSubscription = ({ subscription }: { subscription: Stripe.Subscription }) => {
-  return (
-    <section className="border rounded-lg p-6 mb-4 bg-white shadow-sm">
-      <Link to={"/invoices"} className="inline-flex items-center px-4 py-2 mb-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">Invoices page</Link>
-      <h4 className="text-lg font-semibold mb-4">
-        <a
-          href={`https://dashboard.stripe.com/test/subscriptions/${subscription.id}`}
-          className="text-blue-600 hover:text-blue-800 transition-colors"
-        >
-          {subscription.id}
-        </a>
-      </h4>
-
-      <div className="space-y-2">
-        <p className="flex items-center">
-          <span className="text-gray-600 mr-2">Status:</span>
-          <span className={`font-medium ${
-            subscription.status === 'active'
-              ? 'text-green-600'
-              : 'text-yellow-600'
-          }`}>
-            {subscription.status}
-          </span>
-        </p>
-
-        <p className="flex items-center">
-          <span className="text-gray-600 mr-2">Card last4:</span>
-          <span className="font-mono bg-gray-100 px-2 py-1 rounded">
-            {subscription.default_payment_method?.card?.last4}
-          </span>
-        </p>
-
-        <p className="flex items-center">
-          <span className="text-gray-600 mr-2">Current period end:</span>
-          <span className="text-gray-800">
-            {new Date(subscription.current_period_end * 1000).toLocaleDateString()}
-          </span>
-        </p>
-
-        <div className="mt-4 pt-4 border-t">
-          <Link
-            to={"/cancel"}
-            state={{ subscription: subscription.id }}
-            className="inline-flex items-center text-red-600 hover:text-red-800 transition-colors"
-          >
-            <svg
-              className="w-4 h-4 mr-1"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
-            Cancel Subscription
-          </Link>
-        </div>
-      </div>
-    </section>
-  );
-};
-
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const session = await getSession(request.headers.get("Cookie"));
   const customerId = session.get("customerId") as string;
@@ -136,3 +70,69 @@ const Account = () => {
 };
 
 export default Account;
+
+const AccountSubscription = ({ subscription }: { subscription: Stripe.Subscription }) => {
+  return (
+    <section className="border rounded-lg p-6 mb-4 bg-white shadow-sm">
+      <Link to={"/invoices"} className="inline-flex items-center px-4 py-2 mb-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">Invoices page</Link>
+      <h4 className="text-lg font-semibold mb-4">
+        <a
+          href={`https://dashboard.stripe.com/test/subscriptions/${subscription.id}`}
+          className="text-blue-600 hover:text-blue-800 transition-colors"
+        >
+          {subscription.id}
+        </a>
+      </h4>
+
+      <div className="space-y-2">
+        <p className="flex items-center">
+          <span className="text-gray-600 mr-2">Status:</span>
+          <span className={`font-medium ${
+            subscription.status === 'active'
+              ? 'text-green-600'
+              : 'text-yellow-600'
+          }`}>
+            {subscription.status}
+          </span>
+        </p>
+
+        <p className="flex items-center">
+          <span className="text-gray-600 mr-2">Card last4:</span>
+          <span className="font-mono bg-gray-100 px-2 py-1 rounded">
+            {subscription.default_payment_method?.card?.last4}
+          </span>
+        </p>
+
+        <p className="flex items-center">
+          <span className="text-gray-600 mr-2">Current period end:</span>
+          <span className="text-gray-800">
+            {new Date(subscription.current_period_end * 1000).toLocaleDateString()}
+          </span>
+        </p>
+
+        <div className="mt-4 pt-4 border-t">
+          <Link
+            to={"/cancel"}
+            state={{ subscription: subscription.id }}
+            className="inline-flex items-center text-red-600 hover:text-red-800 transition-colors"
+          >
+            <svg
+              className="w-4 h-4 mr-1"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+            Cancel Subscription
+          </Link>
+        </div>
+      </div>
+    </section>
+  );
+};
