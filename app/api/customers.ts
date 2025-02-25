@@ -5,7 +5,6 @@ import axios from "axios";
 // Input type for creating a customer
 export type CreateCustomerDTO = {
   email: string;
-  name: string;
 };
 
 // Response type from the API
