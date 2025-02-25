@@ -11,7 +11,6 @@ import CardSubscription from "~/components/cardsubscription";
 import type { LoaderFunctionArgs } from "react-router";
 import type { ActionFunctionArgs } from "react-router";
 import { commitSession, getSession } from "~/sessions";
-import { subscribe } from "~/services/payment";
 import { useLoaderData } from "react-router";
 const stripePromise = loadStripe(
   "pk_test_51Qbl21EsiuDlXcqvpCuoaD8nhlqzG652i8UFCih0swymvhgDZKkvd02znheeJDKFloCRP2ecvW8vlJH9CpPwqJOR00BaXU2SXH"
