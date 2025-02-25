@@ -10,8 +10,8 @@ import { commitSession, getSession } from "~/sessions";
 export const action = async ({ request }: ActionFunctionArgs) => {
   const data = await request.formData();
   const email = data.get("email") as string;
-  const name = data.get("name") as string;
-  const createdCustomer = await createCustomer({email, name});
+
+  const createdCustomer = await createCustomer({ email });
 
   const session = await getSession(request.headers.get("Cookie"));
   session.set("customerId", createdCustomer.data.customer_id);
