@@ -4,7 +4,19 @@ import Stripe from "stripe";
 import axios from "axios";
 
 // Define the response type using Stripe types
-export type TPricesResponse = Stripe.ApiList<Stripe.Price>;
+export type TPrice = {
+  id: number;
+  name: string; // max length 100
+  price_description: string; // max length 100
+  stripe_product_id: string; // max length 100
+  stripe_base_price_id: string; // max length 100
+  base_price: number; // decimal with 2 places
+  stripe_per_user_price_id: string; // max length 100
+  per_user_price: number; // decimal with 2 places
+  billing_interval: "month" | "year"; // only these two options
+  lookup_key: string; // max length 100
+};
+export type TPricesResponse = TPrice[];
 export type PricesResponse = {
   success: boolean;
   data: TPricesResponse;
@@ -26,7 +38,7 @@ export const getPrices = async (): Promise<PricesResponse> => {
     );
     return response.data;
   } catch (error: unknown) {
-    console.log({error})
+    console.log({ error });
     if (axios.isAxiosError(error) && error.response) {
       throw {
         error: error.response.data.errors || "Failed to fetch prices",
@@ -55,7 +67,6 @@ export type SubscriptionResponse = {
   data: TSubscriptionResponse;
 };
 
-
 /**
  * Creates a new subscription
  * @param data Object containing customer_id and price_id
@@ -73,7 +84,8 @@ export const createSubscription = async (
 
     return response.data;
   } catch (error: unknown) {
-    console.log({error})
+    console.log({ "ERRORS" : error.response.data });
+    console.log({ error });
     if (axios.isAxiosError(error) && error.response) {
       throw {
         error: error.response.data.errors || "Failed to create subscription",
