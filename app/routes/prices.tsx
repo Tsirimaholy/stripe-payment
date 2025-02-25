@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import type { Route } from "./+types/register";
 import type { ActionFunctionArgs } from "react-router";
 import type { LoaderFunctionArgs } from "react-router";
 import { Form, redirect } from "react-router";
@@ -14,7 +15,9 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const priceId = data.get("priceId") as string;
   const customerId = session.get("customerId") as string;
   try {
-    const { data: {client_secret} } = await createSubscription({
+    const {
+      data: { client_secret },
+    } = await createSubscription({
       customer_id: customerId,
       price_id: priceId,
     });
@@ -30,10 +33,17 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const session = await getSession(request.headers.get("Cookie"));
   const prices = await getPrices();
-  return { prices: prices.data.prices, customerId: session.get("customerId") };
+  return {
+    prices,
+    customerId: session.get("customerId"),
+    error: null,
+  };
 };
+
 const Prices = () => {
-  const { prices, customerId, error } = useLoaderData<typeof loader>();
+  const { prices, customerId } = useLoaderData<typeof loader>();
+  const data = useLoaderData<typeof loader>();
+  const error = data.error || "";
   const location = useLocation();
   const isLoading =
     location.state === "loading" || location.state === "submitting";
@@ -52,23 +62,25 @@ const Prices = () => {
         </div>
 
         <div className="mt-12 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {prices.map((price) => (
+          {prices.data.map((price) => (
             <div
               key={price.id}
               className="bg-white rounded-lg shadow-lg overflow-hidden transition-transform hover:scale-105"
             >
               <div className="px-6 py-8">
                 <h3 className="text-2xl font-bold text-gray-900 text-center mb-4">
-                  {price.product.name}
+                  {price.name}
                 </h3>
 
                 <div className="mt-4 flex justify-center items-center">
                   <span className="text-4xl font-extrabold text-gray-900">
-                    ${price.unit_amount / 100}
+                    {/* can use the old method too here */}
+                    {/* ${price.unit_amount / 100} */}
+                    ${price.price_description}
                   </span>
-                  <span className="ml-2 text-xl font-medium text-gray-500">
+                  {/* <span className="ml-2 text-xl font-medium text-gray-500">
                     /month
-                  </span>
+                  </span> */}
                 </div>
 
                 <div className="mt-8">
