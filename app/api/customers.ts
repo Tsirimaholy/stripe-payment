@@ -10,7 +10,7 @@ export type CreateCustomerDTO = {
 // Response type from the API
 export type TCustomerResponse = Stripe.Response<Stripe.Customer>;
 export type CustomerResponse = {
-  data: {customer_id: string}
+  data: { customer_id: string };
   status: boolean;
 };
 
@@ -43,12 +43,34 @@ export const createCustomer = async (
     return response.data;
   } catch (error: unknown) {
     if (axios.isAxiosError(error) && error.response) {
-      console.log({error})
+      console.log({ error });
       throw {
         error: error.response.data.errors || "Failed to fetch customers",
       } as ErrorResponse;
     }
-    console.log({error})
+    console.log({ error });
+    throw {
+      error: "An unknown error occurred",
+    } as ErrorResponse;
+  }
+};
+export const listPaymentMethods = async (
+  customer: string
+): Promise<{ data: Stripe.Response<Stripe.PaymentMethod[]> }> => {
+  try {
+    const response: AxiosResponse<{
+      data: Stripe.Response<Stripe.PaymentMethod[]>;
+    }> = await api.get("/api/billing/payment-methods/");
+
+    return response.data;
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error) && error.response) {
+      console.log({ error });
+      throw {
+        error: error.response.data.errors || "Failed to fetch customers",
+      } as ErrorResponse;
+    }
+    console.log({ error });
     throw {
       error: "An unknown error occurred",
     } as ErrorResponse;
