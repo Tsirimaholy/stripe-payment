@@ -3,7 +3,7 @@
 - Fills out the registration form with:  
   - Email address  
   - Name  
-- Backend creates a **Stripe customer** using the `createCustomer` API.  
+- Backend creates a **Stripe customer** using the [`createCustomer` API](https://github.com/Tsirimaholy/stripe-payment/blob/7ce66b9289bba0559c6bffe1c50750cbc05bcd66/app/api/customers.ts#L34).  
 - After successful registration, user is redirected to **`/prices`**.  
 
 ### **Subscription Selection**  
